@@ -7,9 +7,10 @@ import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
-
 
 public class TrafficLightActivity extends Activity {
 	GLSurfaceView mGLView;
@@ -27,12 +28,12 @@ public class TrafficLightActivity extends Activity {
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+		
 		if (hasGLES20()) {
 			mGLView = new GLSurfaceView(this);
 			mGLView.setEGLContextClientVersion(2);
 			mGLView.setPreserveEGLContextOnPause(true);
-			mGLView.setRenderer(new TrafficLightRenderer());
+			mGLView.setRenderer(new TrafficLightRenderer(getAssets()));
 		} else {
 			Log.e("Prosectura", "Gles 2.0 not supported.");
 			return;
@@ -52,5 +53,37 @@ public class TrafficLightActivity extends Activity {
 		super.onResume();
 		mGLView.onResume();
 	}
+
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+		return super.onKeyLongPress(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
+		return super.onKeyMultiple(keyCode, repeatCount, event);
+	}
+
+	@Override
+	public boolean onKeyShortcut(int keyCode, KeyEvent event) {
+		return super.onKeyShortcut(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		return super.onKeyUp(keyCode, event);
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		return super.onTouchEvent(event);
+	}
+
 
 }
