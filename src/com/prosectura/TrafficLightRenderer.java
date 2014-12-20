@@ -20,6 +20,22 @@ import android.util.Log;
 
 
 public class TrafficLightRenderer implements Renderer {
+	/*States*/
+	enum COLOR_STATE {
+		CS_OFF,
+		CS_RED,
+		CS_YELLOW,
+		CS_GREEN,
+		CS_REDYELLOW
+	}
+	
+	enum ACTIVITY_STATE {
+		AS_BLINKING,
+		AS_RED,
+		AS_GREEN
+	}
+	
+	/*Asset*/
 	AssetManager am = null;
 	
 	/*Store our model data in a float buffer*/
@@ -380,4 +396,5 @@ public class TrafficLightRenderer implements Renderer {
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
 	}
 
+	
 }
