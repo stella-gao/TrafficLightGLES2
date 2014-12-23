@@ -62,7 +62,14 @@ public class TrafficLightActivity extends Activity {
 		} else if (event.getAction() == MotionEvent.ACTION_UP)
 		{
 			Log.w("prosectura_action", "ACTION_POINTER_UP");
-			mRenderer.GetTL().SetNextTargetState();
+			int iaxisY = 800 >> 2;
+			if (event.getAxisValue(MotionEvent.AXIS_Y) <= (iaxisY*1)) {
+				mRenderer.GetTL().SetRed();
+			} else if (event.getAxisValue(MotionEvent.AXIS_Y) <= (iaxisY*2)) {
+				mRenderer.GetTL().SetBlinking();
+			} else if (event.getAxisValue(MotionEvent.AXIS_Y) <= (iaxisY*3)) {
+				mRenderer.GetTL().SetGreen();
+			}
 		}
 		return super.onTouchEvent(event);
 	}
