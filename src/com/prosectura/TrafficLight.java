@@ -70,8 +70,8 @@ public class TrafficLight {
 	private double GetTimeInState() {
 		//Active color time in active state
 		if (activeState == State.ST_BLINKING) return 0.5;
-		if (activeColor == Color.C_GREEN) return 10.0;
-		if (activeColor == Color.C_RED) return 5.0;
+		if (activeColor == Color.C_GREEN) return 1.0;
+		if (activeColor == Color.C_RED) return 1.0;
 		if (activeColor == Color.C_REDYELLOW) return 2.0;
 		if (activeColor == Color.C_YELLOW) return 2.0;
 		return 1.0;
