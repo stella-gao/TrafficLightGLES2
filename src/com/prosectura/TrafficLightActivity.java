@@ -7,7 +7,6 @@ import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -63,6 +62,7 @@ public class TrafficLightActivity extends Activity {
 		} else if (event.getAction() == MotionEvent.ACTION_UP)
 		{
 			Log.w("prosectura_action", "ACTION_POINTER_UP");
+			mRenderer.GetTL().SetNextTargetState();
 		}
 		return super.onTouchEvent(event);
 	}

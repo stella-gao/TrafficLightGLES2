@@ -15,29 +15,18 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.opengl.GLSurfaceView.Renderer;
-import android.os.SystemClock;
 import android.util.Log;
 
 
 public class TrafficLightRenderer implements Renderer {
-	/*States*/
-	enum COLOR_STATE {
-		CS_OFF,
-		CS_RED,
-		CS_YELLOW,
-		CS_GREEN,
-		CS_REDYELLOW
-	}
-	
-	enum ACTIVITY_STATE {
-		AS_BLINKING,
-		AS_RED,
-		AS_GREEN
-	}
-	
 	/*Asset*/
 	AssetManager am = null;
 	
+	//TrafficLight object
+	private TrafficLight trafficLight = null;
+	private MyTimer timer = null;
+
+	public TrafficLight GetTL() { return trafficLight; }
 	/*Store our model data in a float buffer*/
 	private final FloatBuffer mTriangle1Vertices;
 	
@@ -101,15 +90,16 @@ public class TrafficLightRenderer implements Renderer {
 	
 	public TrafficLightRenderer(AssetManager _am) {
 		am = _am;
+		trafficLight = new TrafficLight();
+		trafficLight.SetOff();
+		timer = new MyTimer();
+		timer.Reset();
 		
 		final float oneh = 1.15f;
 		final float onew = 1.00f;
 		
 		final float[] triangle1VerticesData = {
-				//X,Y,Z,  R,G,B,A
-/*				-0.5f, -0.25f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-				 0.5f, -0.25f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f,
-				 0.0f, 0.559016994f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f*/
+				//X,Y,Z,  U,V
 				-onew, -oneh, 0.0f,		0.0f, 1.0f,
 				-onew,  oneh, 0.0f,		0.0f, 0.0f,
 				 onew, -oneh, 0.0f,		1.0f, 1.0f,
@@ -216,7 +206,7 @@ public class TrafficLightRenderer implements Renderer {
 	@Override
 	public void onSurfaceCreated(GL10 notUsed, EGLConfig config) {
 		//Set the background color to gray.
-		GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		//Position the eye behind the origin.
 		final float eyeX = 0.0f;
@@ -345,21 +335,24 @@ public class TrafficLightRenderer implements Renderer {
 		//Bind the texture to this unit.
 		int textureHandle = 0;
 		
-		long myTime = SystemClock.uptimeMillis() % 1000L;
-		if (myTime < 500) {
-			textureHandle = mTextureDataHandle_0;
-		} else {
-			textureHandle = mTextureDataHandle_Y;
+		timer.Actualize();
+		trafficLight.Run(timer.getDelta());
+		
+		switch (trafficLight.GetActiveColor())
+		{
+		case C_RED: textureHandle = mTextureDataHandle_R; break;
+		case C_REDYELLOW: textureHandle = mTextureDataHandle_RY; break;
+		case C_GREEN: textureHandle = mTextureDataHandle_G; break;
+		case C_YELLOW: textureHandle = mTextureDataHandle_Y; break;
+		case C_OFF: textureHandle = mTextureDataHandle_0; break;
+		default:
+			break;
 		}
 		
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle);
 		
 		//Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
 		GLES20.glUniform1i(mTextureUniformHandle, 0);
-
-		
-		
-		
 		drawTriangle(mTriangle1Vertices);
 	}
 	
